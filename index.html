@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e7777">
+<title>EVANGELINE · Mi primer añito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#103e3c;--teal:#167f7b;--lagoon:#8ed8d0;--coral:#df7968;
+  --sand:#f7edda;--paper:#fff9ed;--gold:#c29a58;--ink:#28433d;
+  --muted:#6e8177;--shadow:0 24px 70px #082b2b35;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--deep);color:var(--ink);font-family:"DM Sans",sans-serif}
+button,input,textarea{font:inherit}
+button,a{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+.cover-screen{
+  min-height:100svh;display:flex;align-items:center;justify-content:center;
+  padding:28px 18px 36px;position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse at 12% 12%,#3d8b7255,transparent 32%),
+    radial-gradient(ellipse at 90% 82%,#d9786540,transparent 30%),
+    linear-gradient(135deg,#103e3c,#155b55 55%,#0c3938);
+}
+.cover-screen:before,.cover-screen:after{
+  content:"";position:absolute;width:260px;height:360px;opacity:.16;pointer-events:none;
+  background:repeating-radial-gradient(ellipse at 50% 100%,transparent 0 13px,#c5d6a0 14px 15px,transparent 16px 27px);
+  border-radius:100% 0 100% 0;transform:rotate(-35deg)
+}
+.cover-screen:before{left:-105px;top:-70px}.cover-screen:after{right:-110px;bottom:-95px;transform:rotate(145deg)}
+.cover-wrap{width:min(100%,470px);position:relative;z-index:1;text-align:center}
+.eyebrow{color:#e9d3a6;letter-spacing:.24em;font-size:.67rem;text-transform:uppercase;margin:0 0 20px}
+.envelope-stage{position:relative;width:min(100%,390px);height:300px;margin:0 auto 26px;perspective:1200px;filter:drop-shadow(0 25px 24px #041d1b70)}
+.envelope{
+  position:absolute;inset:34px 0 0;height:246px;border-radius:5px;
+  background:linear-gradient(145deg,#c8a477,#a97b4d 65%,#8c603f);
+  overflow:visible;cursor:pointer;outline:none;
+}
+.envelope:before{content:"";position:absolute;inset:0;border:1px solid #f1d7a477;z-index:4;pointer-events:none}
+.env-front{
+  position:absolute;inset:0;background:linear-gradient(145deg,#d2b18a,#b78b5d);
+  clip-path:polygon(0 0,50% 57%,100% 0,100% 100%,0 100%);z-index:3;
+}
+.env-left,.env-right{position:absolute;inset:0;z-index:2}
+.env-left{background:#c39b6c;clip-path:polygon(0 0,50% 57%,0 100%)}
+.env-right{background:#b58a5b;clip-path:polygon(100% 0,50% 57%,100% 100%)}
+.env-bottom{position:absolute;inset:0;background:linear-gradient(25deg,#b68b5c,#d0ac80);clip-path:polygon(0 100%,50% 48%,100% 100%);z-index:3}
+.env-flap{
+ position:absolute;top:0;left:0;width:100%;height:64%;background:linear-gradient(155deg,#e0c39b,#b98c5d);
+ clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top center;transform:rotateX(0);
+ transition:transform .95s cubic-bezier(.2,.75,.2,1);z-index:5;backface-visibility:visible;
+}
+.env-name{position:absolute;top:22px;left:0;width:100%;z-index:6;font-family:"Cormorant Garamond",serif;font-size:clamp(1.45rem,6vw,2rem);letter-spacing:.24em;color:#fff4d9;text-shadow:0 1px 2px #785538}
+.wax{
+ position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:83px;height:83px;border-radius:50%;z-index:7;
+ display:grid;place-items:center;color:#f1d7a2;
+ background:radial-gradient(circle at 34% 27%,#bd9262,#765037 68%,#553924);
+ border:2px solid #d7b47a;box-shadow:inset 0 0 0 4px #68472f,inset 0 0 0 6px #c19b65,0 7px 14px #55351c65;
+ transition:transform .3s;
+}
+.wax svg{width:42px;height:42px;filter:drop-shadow(1px 2px 1px #3b281e)}
+.envelope:hover .wax{transform:translate(-50%,-50%) scale(1.06)}
+.envelope.open .env-flap{transform:rotateX(180deg);z-index:1}
+.envelope.open .wax{opacity:0;transition:opacity .2s .25s}
+.envelope.open{cursor:default}
+.tap-hint{color:#f9e8c8;font-size:.72rem;letter-spacing:.17em;animation:pulse 1.8s ease-in-out infinite}
+.guest-line{color:#d9e8d8;font-size:.77rem;line-height:1.65;margin:22px auto 0;max-width:340px}
+.guest-line strong{color:#f3d8a2;font-weight:600}
+@keyframes pulse{0%,100%{opacity:.65}50%{opacity:1}}
+.invitation{display:none;background:var(--sand);min-height:100vh;padding:26px 14px 50px;position:relative;overflow:hidden}
+.invitation.visible{display:block;animation:reveal .9s both}
+@keyframes reveal{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.paper{width:min(100%,650px);margin:0 auto;background:linear-gradient(180deg,rgba(204,239,224,.78),rgba(176,225,217,.70)),url('mar-oceanico.png') center center/cover no-repeat;position:relative;overflow:hidden;box-shadow:var(--shadow);border:1px solid #d8bf91}
+.paper:before{content:"";position:absolute;inset:9px;border:1px solid #c6a66b;pointer-events:none;z-index:2}
+.paper-inner{position:relative;z-index:1;padding:44px clamp(22px,6vw,58px) 38px;text-align:center;background:linear-gradient(180deg,rgba(224,246,231,.34),rgba(188,231,222,.30))}
+.corner{position:absolute;width:145px;opacity:.72;pointer-events:none;z-index:0}
+.corner.tl{top:-17px;left:-20px;transform:rotate(0deg)}.corner.br{right:-18px;bottom:-25px;transform:rotate(180deg)}
+.mini-label{font-size:.65rem;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);font-weight:700}
+.script{font-family:"Great Vibes",cursive;color:var(--coral);font-weight:400}
+h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:clamp(2.2rem,8vw,4rem);line-height:.98;margin:16px 0 8px;color:var(--deep)}
+h1 .script{display:block;font-size:1.25em;line-height:1.05}
+.subtitle{font-family:"Cormorant Garamond",serif;font-size:1.12rem;letter-spacing:.08em;color:#6b7666}
+.divider{display:flex;align-items:center;gap:13px;justify-content:center;margin:22px 0;color:var(--gold)}
+.divider:before,.divider:after{content:"";height:1px;width:64px;background:linear-gradient(90deg,transparent,var(--gold))}
+.divider:after{transform:rotate(180deg)}
+.heart-mark{width:24px;height:24px}
+.intro{max-width:440px;margin:0 auto;font-family:"Cormorant Garamond",serif;font-size:1.3rem;line-height:1.5}
+.baby-name{font-family:"Cormorant Garamond",serif;font-size:clamp(2.7rem,10vw,4.2rem);letter-spacing:.1em;color:var(--teal);margin:10px 0}
+.age{display:inline-block;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold);padding:8px 20px;margin:5px 0 17px;color:#89683b;letter-spacing:.2em;font-size:.75rem}
+.music-control{display:inline-flex;align-items:center;gap:9px;border:1px solid #b8cfc4;background:#eff5e9;color:var(--deep);border-radius:30px;padding:10px 16px;font-size:.78rem;margin:8px 0 22px}
+.music-control .music-icon{font-size:1rem}
+.details{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 24px}
+.detail{padding:15px 8px;background:rgba(235,247,226,.72);border:1px solid rgba(194,154,88,.65);min-width:0;backdrop-filter:blur(3px)}
+.detail-icon{font-size:1.25rem;color:var(--teal)}
+.detail h3{font-size:.63rem;letter-spacing:.14em;margin:7px 0;text-transform:uppercase;color:#8c7047}
+.detail p{font-family:"Cormorant Garamond",serif;font-size:1.12rem;line-height:1.2;margin:0;color:var(--deep)}
+.detail small{display:block;font-family:"DM Sans",sans-serif;font-size:.7rem;margin-top:4px;color:var(--muted)}
+.map-button{display:inline-block;text-decoration:none;color:white;background:var(--teal);border-radius:30px;padding:11px 21px;font-size:.74rem;letter-spacing:.1em;margin-bottom:27px;transition:background .2s,transform .2s}
+.map-button:hover{background:var(--deep);transform:translateY(-2px)}
+.section-title{font-family:"Cormorant Garamond",serif;font-size:1.65rem;font-weight:500;color:var(--deep);margin:15px 0 8px}
+.section-copy{font-size:.86rem;line-height:1.7;color:#61736a;max-width:420px;margin:0 auto}
+.dress-code{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px auto 24px}
+.dress-icon{width:42px;height:42px;border-radius:50%;background:#e6eee0;display:grid;place-items:center;font-size:1.25rem}
+.dress-code strong{display:block;font-size:.78rem;letter-spacing:.09em;color:var(--teal)}
+.dress-code span{font-size:.75rem;color:var(--muted)}
+.countdown{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:360px;margin:17px auto 26px}
+.time-box{padding:13px 6px;background:rgba(16,62,60,.94);color:#fff3d9}
+.time-box strong{display:block;font-family:"Cormorant Garamond",serif;font-size:2rem;font-weight:500}
+.time-box span{font-size:.58rem;letter-spacing:.15em;color:#d8c69f}
+.gift-note{margin:0 auto 24px;padding:16px 18px;max-width:440px;border-top:1px solid #dbc79e;border-bottom:1px solid #dbc79e;background:rgba(236,247,227,.56);font-family:"Cormorant Garamond",serif;font-size:1.15rem;line-height:1.5}
+.rsvp{max-width:440px;margin:0 auto;text-align:left}
+.rsvp label{display:block;font-size:.72rem;color:#566b61;margin:12px 0 6px;font-weight:600}
+.rsvp input,.rsvp textarea,.rsvp select{width:100%;border:1px solid #d8c9a9;background:#fffdf7;padding:12px 13px;color:var(--ink);border-radius:3px;outline:none}
+.rsvp input:focus,.rsvp textarea:focus,.rsvp select:focus{border-color:var(--teal);box-shadow:0 0 0 3px #167f7b19}
+.rsvp button{width:100%;margin-top:15px;border:0;background:var(--coral);color:white;padding:14px;border-radius:3px;font-weight:700;font-size:.78rem;letter-spacing:.12em}
+.rsvp button:hover{background:#c65f51}
+.form-message{font-size:.82rem;line-height:1.5;padding:12px;margin-top:12px;display:none;background:#e8f2e5;color:#315d45;border:1px solid #bfd6bb}
+.footer{margin-top:28px;font-family:"Cormorant Garamond",serif;font-size:1.25rem;color:var(--teal)}
+.footer small{display:block;font-family:"DM Sans",sans-serif;font-size:.62rem;letter-spacing:.18em;margin-top:9px;color:#8b927e}
+.floating-music{position:fixed;right:15px;bottom:15px;z-index:20;width:48px;height:48px;border:1px solid #d5c49b;border-radius:50%;background:var(--deep);color:#fff1cf;box-shadow:0 5px 20px #0002;display:none}
+.floating-music.show{display:block}
+@media(max-width:420px){
+ .envelope-stage{height:270px}.envelope{height:218px;top:30px}
+ .details{gap:5px}.detail{padding:12px 4px}.detail p{font-size:1rem}
+ .paper-inner{padding:38px 20px 30px}.corner{width:105px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+  <section class="cover-screen" id="cover" aria-label="Sobre de invitación">
+    <div class="cover-wrap">
+      <p class="eyebrow">Una celebración llena de magia</p>
+      <div class="envelope-stage">
+        <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Abrir invitación">
+          <div class="env-left"></div><div class="env-right"></div>
+          <div class="env-bottom"></div>
+          <div class="env-front"></div>
+          <div class="env-name">EVANGELINE</div>
+          <div class="env-flap"></div>
+          <div class="wax" aria-hidden="true">
+            <!-- Espiral original inspirada en motivos oceánicos polinesios; no es un logotipo oficial -->
+            <svg viewBox="0 0 100 100" fill="none" aria-hidden="true">
+              <path d="M50 16C30 16 19 31 22 46c3 16 20 25 35 18 12-6 13-22 3-29-8-6-20-1-20 9 0 7 8 11 13 7" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+              <path d="M51 84c19 0 30-15 27-30-2-10-8-17-17-20M15 58c6 18 20 28 36 28" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="tap-hint">✦ DA CLIC AQUÍ PARA ABRIR ✦</div>
+      <p class="guest-line"><strong id="guestDisplay">[Nombre del Invitado]</strong><br>HEMOS RESERVADO <strong id="seatDisplay">(1) CUPO</strong> PARA TI</p>
+    </div>
+  </section>
+
+  <section class="invitation" id="invitation" aria-label="Invitación de cumpleaños">
+    <article class="paper">
+      <svg class="corner tl" viewBox="0 0 160 180" aria-hidden="true"><g fill="none" stroke="#43816c" stroke-width="2"><path d="M7 7Q75 30 80 105Q30 88 7 7Z" fill="#a5c5a0"/><path d="M12 12L70 91M28 23L33 62M43 36L58 71M56 49L68 81"/><path d="M12 12Q25 75 80 105" stroke="#d4b46c"/><path d="M37 8C66 19 78 43 69 62C51 52 41 32 37 8Z" fill="#e7a092"/><path d="M52 20L64 53"/></g><circle cx="38" cy="38" r="9" fill="#e8a18d"/><circle cx="38" cy="38" r="3" fill="#d8bb76"/></svg>
+      <svg class="corner br" viewBox="0 0 160 180" aria-hidden="true"><g fill="none" stroke="#43816c" stroke-width="2"><path d="M7 7Q75 30 80 105Q30 88 7 7Z" fill="#a5c5a0"/><path d="M12 12L70 91M28 23L33 62M43 36L58 71M56 49L68 81"/><path d="M12 12Q25 75 80 105" stroke="#d4b46c"/><path d="M37 8C66 19 78 43 69 62C51 52 41 32 37 8Z" fill="#e7a092"/><path d="M52 20L64 53"/></g><circle cx="38" cy="38" r="9" fill="#e8a18d"/><circle cx="38" cy="38" r="3" fill="#d8bb76"/></svg>
+      <div class="paper-inner">
+        <div class="mini-label">Con mucho amor, te invitamos a celebrar</div>
+        <h1>¡Mi primer <span class="script">añito!</span></h1>
+        <div class="baby-name">EVANGELINE</div>
+        <div class="age">UNA AVENTURA · UN AÑO DE AMOR</div>
+        <p class="intro">El océano nos ha traído un motivo hermoso para celebrar. Acompáñanos a vivir una tarde mágica, llena de alegría, abrazos y recuerdos inolvidables.</p>
+        <div class="divider"><svg class="heart-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21S2.5 15.5 2.5 8.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 9.5 1.5C21.5 15.5 12 21 12 21Z"/></svg></div>
+
+        <button class="music-control" id="musicToggle" type="button" aria-pressed="false"><span class="music-icon" id="musicIcon">▶</span><span id="musicText">Dale play para escuchar nuestra canción</span></button>
+        <!-- Melodía original y suave generada en el navegador; no necesita archivo externo. -->
+
+        <div class="mini-label">Guarda la fecha</div>
+        <div class="details">
+          <div class="detail"><div class="detail-icon">✿</div><h3>Fecha</h3><p>28 diciembre</p><small>Lunes · 2026</small></div>
+          <div class="detail"><div class="detail-icon">◷</div><h3>Hora</h3><p>2:00 p. m.</p><small>Te esperamos</small></div>
+          <div class="detail"><div class="detail-icon">⌖</div><h3>Lugar</h3><p>La Castellana</p><small>Country Club</small></div>
+        </div>
+        <a class="map-button" href="https://www.google.com/maps/search/?api=1&query=La+Castellana+Country+Club+San+Cristobal+Tachira+Venezuela" target="_blank" rel="noopener noreferrer">↗ &nbsp; VER UBICACIÓN</a>
+
+        <div class="divider">✧</div>
+        <h2 class="section-title">Un toque tropical</h2>
+        <div class="dress-code"><div class="dress-icon">🌺</div><div><strong>DRESS CODE</strong><span>Tropical hawaiano · colores alegres y frescos</span></div></div>
+
+        <h2 class="section-title">Cuenta regresiva</h2>
+        <p class="section-copy">¡Cada día falta un poquito menos para nuestra aventura!</p>
+        <div class="countdown" aria-label="Cuenta regresiva">
+          <div class="time-box"><strong id="days">--</strong><span>DÍAS</span></div>
+          <div class="time-box"><strong id="hours">--</strong><span>HORAS</span></div>
+          <div class="time-box"><strong id="minutes">--</strong><span>MINUTOS</span></div>
+        </div>
+
+        <h2 class="section-title">Tu cariño es nuestro regalo</h2>
+        <p class="gift-note">Tu presencia hará este día aún más especial. Si deseas hacernos un regalo, una lluvia de sobres será recibida con mucho amor y gratitud.</p>
+
+        <div class="divider">✧</div>
+        <h2 class="section-title">¿Nos acompañas?</h2>
+        <p class="section-copy">Por favor, confirma tu asistencia para que podamos esperarte.</p>
+        <form class="rsvp" id="rsvpForm">
+          <label for="guestName">Tu nombre</label>
+          <input id="guestName" name="guestName" autocomplete="name" placeholder="Escribe tu nombre" required>
+          <label for="attendance">¿Podrás acompañarnos?</label>
+          <select id="attendance" name="attendance" required>
+            <option value="" disabled selected>Selecciona una opción</option>
+            <option value="Sí, allí estaré">¡Sí, allí estaré!</option>
+            <option value="Lo siento, no podré asistir">Lo siento, no podré asistir</option>
+          </select>
+          <label for="guestCount">Número de personas (incluyéndote)</label>
+          <select id="guestCount" name="guestCount">
+            <option value="1">1 persona</option><option value="2">2 personas</option><option value="3">3 personas</option><option value="4">4 personas</option>
+          </select>
+          <label for="message">Un mensajito para Evangeline (opcional)</label>
+          <textarea id="message" name="message" rows="3" placeholder="Escribe aquí tus buenos deseos…"></textarea>
+          <button type="submit">ENVIAR CONFIRMACIÓN</button>
+          <div class="form-message" id="formMessage" role="status" aria-live="polite"></div>
+        </form>
+        <div class="footer">¡Aloha, te esperamos!<small>CON AMOR, NICOLE, ANGEL & EVANGELINE</small></div>
+      </div>
+    </article>
+  </section>
+  <button class="floating-music" id="floatingMusic" type="button" aria-label="Reproducir o pausar música">♫</button>
+</main>
+<script>
+(() => {
+  const envelope = document.getElementById('envelope');
+  const cover = document.getElementById('cover');
+  const invitation = document.getElementById('invitation');
+  let opened = false;
+
+  function openInvitation() {
+    if (opened) return;
+    opened = true;
+    envelope.classList.add('open');
+    envelope.setAttribute('aria-label', 'Invitación abierta');
+    window.setTimeout(() => {
+      cover.style.display = 'none';
+      invitation.classList.add('visible');
+      document.body.style.background = 'var(--sand)';
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }, 820);
+  }
+  envelope.addEventListener('click', openInvitation);
+  envelope.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openInvitation();
+    }
+  });
+
+  // Fecha y hora local de Venezuela (UTC-4): 28 de diciembre de 2026, 14:00.
+  const partyDate = new Date('2026-12-28T14:00:00-04:00');
+  const pad = n => String(n).padStart(2, '0');
+  function updateCountdown() {
+    const now = new Date();
+    let diff = partyDate.getTime() - now.getTime();
+    if (diff <= 0) {
+      document.getElementById('days').textContent = '0';
+      document.getElementById('hours').textContent = '00';
+      document.getElementById('minutes').textContent = '00';
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    diff %= 86400000;
+    const hours = Math.floor(diff / 3600000);
+    diff %= 3600000;
+    const minutes = Math.floor(diff / 60000);
+    document.getElementById('days').textContent = days;
+    document.getElementById('hours').textContent = pad(hours);
+    document.getElementById('minutes').textContent = pad(minutes);
+  }
+  updateCountdown();
+  window.setInterval(updateCountdown, 30000);
+
+  // Personalización por enlace: ?nombre=María%20y%20familia&cupos=3
+  const params = new URLSearchParams(window.location.search);
+  const guestNameParam = params.get('nombre');
+  const seatsParam = Number.parseInt(params.get('cupos') || '1', 10);
+  if (guestNameParam && guestNameParam.trim()) {
+    document.getElementById('guestDisplay').textContent = guestNameParam.trim();
+  }
+  const safeSeats = Number.isFinite(seatsParam) ? Math.min(20, Math.max(1, seatsParam)) : 1;
+  document.getElementById('seatDisplay').textContent = `(${safeSeats}) ${safeSeats === 1 ? 'CUPO' : 'CUPOS'}`;
+
+  const musicToggle = document.getElementById('musicToggle');
+  const musicIcon = document.getElementById('musicIcon');
+  const musicText = document.getElementById('musicText');
+  const floatingMusic = document.getElementById('floatingMusic');
+  let audioContext = null;
+  let masterGain = null;
+  let melodyTimer = null;
+  let melodyIndex = 0;
+  let musicPlaying = false;
+
+  // Melodía de cuna original con tonos suaves y arpegios; el navegador crea el sonido.
+  const melody = [
+    [523.25, 659.25, 783.99], [587.33, 698.46, 880.00],
+    [659.25, 783.99, 987.77], [587.33, 698.46, 880.00],
+    [523.25, 659.25, 783.99], [392.00, 523.25, 659.25],
+    [440.00, 587.33, 698.46], [392.00, 523.25, 659.25]
+  ];
+  function playChord(frequencies) {
+    if (!audioContext || !masterGain || !musicPlaying) return;
+    const now = audioContext.currentTime;
+    frequencies.forEach((frequency, i) => {
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      oscillator.type = i === 0 ? 'sine' : 'triangle';
+      oscillator.frequency.setValueAtTime(frequency / (i === 0 ? 2 : 1), now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(i === 0 ? 0.055 : 0.022, now + 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.65);
+      oscillator.connect(gain);
+      gain.connect(masterGain);
+      oscillator.start(now);
+      oscillator.stop(now + 1.7);
+    });
+  }
+  function setMusicUI(playing) {
+    musicToggle.setAttribute('aria-pressed', String(playing));
+    musicIcon.textContent = playing ? 'Ⅱ' : '▶';
+    musicText.textContent = playing ? 'Pausar nuestra melodía' : 'Dale play para escuchar nuestra canción';
+    floatingMusic.textContent = playing ? 'Ⅱ' : '♫';
+  }
+  async function toggleMusic() {
+    if (musicPlaying) {
+      musicPlaying = false;
+      if (melodyTimer) window.clearInterval(melodyTimer);
+      melodyTimer = null;
+      if (audioContext && audioContext.state === 'running') await audioContext.suspend();
+      setMusicUI(false);
+      return;
+    }
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) throw new Error('Web Audio no está disponible en este navegador.');
+      if (!audioContext) {
+        audioContext = new AudioContextClass();
+        masterGain = audioContext.createGain();
+        masterGain.gain.value = 0.32;
+        masterGain.connect(audioContext.destination);
+      }
+      await audioContext.resume();
+      musicPlaying = true;
+      playChord(melody[melodyIndex % melody.length]);
+      melodyIndex++;
+      melodyTimer = window.setInterval(() => {
+        playChord(melody[melodyIndex % melody.length]);
+        melodyIndex++;
+      }, 1450);
+      setMusicUI(true);
+    } catch (error) {
+      musicText.textContent = 'Tu navegador no permite reproducir esta melodía';
+      setMusicUI(false);
+    }
+  }
+  musicToggle.addEventListener('click', toggleMusic);
+  floatingMusic.addEventListener('click', toggleMusic);
+  window.addEventListener('scroll', () => {
+    floatingMusic.classList.toggle('show', window.scrollY > 420 && invitation.classList.contains('visible'));
+  }, {passive:true});
+
+  // Demostración local: muestra confirmación en pantalla, pero no envía datos a un servidor.
+  document.getElementById('rsvpForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const name = document.getElementById('guestName').value.trim();
+    const attendance = document.getElementById('attendance').value;
+    const count = document.getElementById('guestCount').value;
+    const message = document.getElementById('message').value.trim();
+    const box = document.getElementById('formMessage');
+    box.style.display = 'block';
+    box.textContent = attendance.startsWith('Sí')
+      ? `¡Gracias, ${name}! Tu confirmación de ${count} persona(s) quedó registrada en esta demostración. Para recibirla de verdad, conecta este formulario a un servicio de RSVP.`
+      : `Gracias por avisarnos, ${name}. En esta demostración tu respuesta quedó mostrada en pantalla.`;
+    // Para una integración real, envía {name, attendance, count, message} a tu backend o proveedor de formularios.
+    console.info('RSVP de demostración:', {name, attendance, count, message});
+    box.scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+})();
+</script>
+</body>
+</html>
